@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "maze.h"
 
 class ofApp : public ofBaseApp{
 
@@ -20,6 +21,11 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+        //about maze method
+        void createMaze(CELL **maze, int N, int M);
+        void printMaze(CELL **maze, int N, int M);
+        void drawMaze(CELL **maze, int N, int M);
 		
     //user defined variables
     int playerX, playerY;
@@ -29,4 +35,7 @@ class ofApp : public ofBaseApp{
     int lineWidth;
     int topLx, topRx, downLx, downRx;
     int topLy, topRy, downLy, downRy;
+    int drawMazeFlag = 0;
+    
+    CELL **maze;
 };
