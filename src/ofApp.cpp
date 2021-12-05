@@ -15,6 +15,8 @@ void ofApp::setup(){
     
     playerX = boxStartX + lineWidth;
     playerY = boxStartY + lineWidth;
+    playerMazeX = 0;
+    playerMazeY = 0;
     
     //set the coordinate of the corner cells
     topLx = playerX;
@@ -69,6 +71,11 @@ void ofApp::draw(){
     ofSetColor(247,233,3);
     //ofDrawRectangle(playerX, playerY, 60, 60);
     ofDrawCircle(playerX+30, playerY+30, 29);
+    ofSetColor(0, 0, 0);
+    ofDrawLine(playerX+30-8, playerY+30-3, playerX+30-8, playerY+30-13);
+    ofDrawLine(playerX+30+8, playerY+30-3, playerX+30+8, playerY+30-13);
+    ofSetColor(247,233,3);
+
     
     //Draw Maze
     if(drawMazeFlag){
@@ -79,20 +86,32 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if(key == OF_KEY_UP){
-        if(playerY > topLy)
-            playerY -= 62;
+        if(playerMazeX != 0){
+            if(playerY > topLy && maze[playerMazeX-1][playerMazeY].horizontal == 0){
+                playerY -= 62;
+                playerMazeX--;
+            }
+        }
     }
     if(key == OF_KEY_RIGHT){
-        if(playerX < topRx)
+        if(playerX < topRx && maze[playerMazeX][playerMazeY].vertical == 0){
             playerX += 62;
+            playerMazeY++;
+        }
     }
     if(key == OF_KEY_DOWN){
-        if(playerY < downLy)
+        if(playerY < downLy && maze[playerMazeX][playerMazeY].horizontal == 0){
             playerY += 62;
+            playerMazeX++;
+        }
     }
     if(key == OF_KEY_LEFT){
-        if(playerX > downLx)
-            playerX -= 62;
+        if(playerMazeY != 0){
+            if(playerX > downLx && maze[playerMazeX][playerMazeY-1].vertical == 0){
+                playerX -= 62;
+                playerMazeY--;
+            }
+        }
     }
     if(key == 'd'){
         drawMazeFlag = 1;
