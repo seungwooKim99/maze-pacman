@@ -23,4 +23,10 @@ class ofApp : public ofBaseApp{
 		
     //user defined variables
     int playerX, playerY;
+    int mWidth, mHeight;
+    int cellSize;
+    int boxStartX, boxStartY;
+    int lineWidth;
+    int topLx, topRx, downLx, downRx;
+    int topLy, topRy, downLy, downRy;
 };

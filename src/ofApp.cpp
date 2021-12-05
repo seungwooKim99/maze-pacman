@@ -2,10 +2,31 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    printf("%d\n", ofGetWidth());
-    printf("%d\n", ofGetHeight());
-    playerX = ofGetWidth()/2;
-    playerY = ofGetHeight()/2;
+    //set Background Color Black
+    ofSetBackgroundColor(0,0,0);
+
+    cellSize = 60;
+    mWidth = mHeight = 10;
+    lineWidth = 2;
+    boxStartX = ofGetWidth()/2 - (cellSize * 10 + lineWidth * 11)/2;
+    boxStartY = ofGetHeight()/2 - (cellSize * 10 + lineWidth * 11)/2;
+    
+    playerX = boxStartX + lineWidth;
+    playerY = boxStartY + lineWidth;
+    
+    //set the coordinate of the corner cells
+    topLx = playerX;
+    topLy = playerY;
+    
+    topRx = topLx + cellSize*9 + lineWidth*9;
+    topRy = topLy;
+    
+    downLx = topLx;
+    downLy = topLy + cellSize*9 + lineWidth*9;
+    
+    downRx = topLx + cellSize*9 + lineWidth*9;
+    downRy = topLy + cellSize*9 + lineWidth*9;
+    
 }
 
 //--------------------------------------------------------------
@@ -15,31 +36,38 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    ofSetColor(127,23,31);  // Set the drawing color to brown
-    
-    // Draw shapes for ceiling and floor
-    ofDrawRectangle(0, 0, 1024, 40); // Top left corner at (50, 50), 100 wide x 100 high
-    ofDrawRectangle(0, 728, 1024, 40); // Top left corner at (50, 50), 100 wide x 100 high
-    ofDrawRectangle(0,100,1024,2);
-    ofSetLineWidth(5);
-    //ofGetWidth();
-    ofSetColor(33,127,31);
-    ofDrawCircle(playerX, playerY, 10);
+    //Draw Out line of the Box
+    ofSetColor(14,37,179);
+    ofSetLineWidth(lineWidth);
+    int lineLegth = cellSize*10 + lineWidth*11;
+    ofDrawLine(boxStartX, boxStartY, boxStartX + lineLegth, boxStartY);
+    ofDrawLine(boxStartX, boxStartY, boxStartX, boxStartY + lineLegth);
+    ofDrawLine(boxStartX + lineLegth, boxStartY, boxStartX + lineLegth, boxStartY + lineLegth);
+    ofDrawLine(boxStartX, boxStartY + lineLegth, boxStartX + lineLegth, boxStartY + lineLegth);
+
+    //Draw player
+    ofSetColor(247,233,3);
+    //ofDrawRectangle(playerX, playerY, 60, 60);
+    ofDrawCircle(playerX+30, playerY+30, 29);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if(key == OF_KEY_UP){
-        playerY -= 10;
+        if(playerY > topLy)
+            playerY -= 62;
     }
     if(key == OF_KEY_RIGHT){
-        playerX += 10;
+        if(playerX < topRx)
+            playerX += 62;
     }
     if(key == OF_KEY_DOWN){
-        playerY += 10;
+        if(playerY < downLy)
+            playerY += 62;
     }
     if(key == OF_KEY_LEFT){
-        playerX -= 10;
+        if(playerX > downLx)
+            playerX -= 62;
     }
 }
 
