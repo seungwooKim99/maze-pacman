@@ -48,6 +48,21 @@ void ofApp::setup(){
     createMaze(maze, N, M);
     //printMaze(maze, N, M);
     drawMaze(maze, 10, 10);
+    
+    //init visited
+    visited = (int **)malloc(sizeof(int*)*N);
+    for(i=0;i<N;i++){
+        for(j=0;j<N;j++){
+            visited[i] = (int*)malloc(sizeof(int*)*M);
+        }
+    }
+    for(i=0;i<N;i++){
+        for(j=0;j<M;j++){
+            visited[i][j] = 0;
+        }
+    }
+    visited[0][0] = 1;
+    visited[N-1][M-1] = 1;
 
 }
 
@@ -67,10 +82,13 @@ void ofApp::draw(){
     ofDrawLine(boxStartX + lineLegth, boxStartY, boxStartX + lineLegth, boxStartY + lineLegth);
     ofDrawLine(boxStartX, boxStartY + lineLegth, boxStartX + lineLegth, boxStartY + lineLegth);
 
+    //Draw Coin
+    drawCoin(maze, 10, 10);
+    
     //Draw player
     ofSetColor(247,233,3);
     //ofDrawRectangle(playerX, playerY, 60, 60);
-    ofDrawCircle(playerX+30, playerY+30, 29);
+    ofDrawCircle(playerX+30, playerY+30, 20);
     ofSetColor(0, 0, 0);
     ofDrawLine(playerX+30-8, playerY+30-3, playerX+30-8, playerY+30-13);
     ofDrawLine(playerX+30+8, playerY+30-3, playerX+30+8, playerY+30-13);
@@ -78,9 +96,7 @@ void ofApp::draw(){
 
     
     //Draw Maze
-    if(drawMazeFlag){
-        drawMaze(maze, 10, 10);
-    }
+    drawMaze(maze, 10, 10);
 }
 
 //--------------------------------------------------------------
@@ -90,6 +106,7 @@ void ofApp::keyPressed(int key){
             if(playerY > topLy && maze[playerMazeX-1][playerMazeY].horizontal == 0){
                 playerY -= 62;
                 playerMazeX--;
+                visited[playerMazeX][playerMazeY] = 1;
             }
         }
     }
@@ -97,12 +114,15 @@ void ofApp::keyPressed(int key){
         if(playerX < topRx && maze[playerMazeX][playerMazeY].vertical == 0){
             playerX += 62;
             playerMazeY++;
+            visited[playerMazeX][playerMazeY] = 1;
+            //printf("visited[2][2]: %d, (x,y)=(%d,%d)\n", visited[2][2],playerMazeX,playerMazeY);
         }
     }
     if(key == OF_KEY_DOWN){
         if(playerY < downLy && maze[playerMazeX][playerMazeY].horizontal == 0){
             playerY += 62;
             playerMazeX++;
+            visited[playerMazeX][playerMazeY] = 1;
         }
     }
     if(key == OF_KEY_LEFT){
@@ -110,6 +130,7 @@ void ofApp::keyPressed(int key){
             if(playerX > downLx && maze[playerMazeX][playerMazeY-1].vertical == 0){
                 playerX -= 62;
                 playerMazeY--;
+                visited[playerMazeX][playerMazeY] = 1;
             }
         }
     }
@@ -369,4 +390,22 @@ void ofApp::drawMaze(CELL **maze, int N, int M){
     //    printf("-+");
     //}
     return;
+}
+
+void ofApp::drawCoin(CELL **maze, int N, int M){
+    ofSetColor(151, 124, 104);
+    int i,j;
+    int X = boxStartX + lineWidth;
+    int Y = boxStartY + lineWidth;
+    
+    for(i=0;i<N;i++){
+        for(j=0;j<M;j++){
+            if(visited[i][j] == 0){
+                ofDrawCircle(X+30, Y+30, 3);
+            }
+            X += (lineWidth + cellSize);
+        }
+        X = boxStartX + lineWidth;
+        Y += (lineWidth + cellSize);
+    }
 }

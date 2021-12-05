@@ -26,6 +26,7 @@ class ofApp : public ofBaseApp{
         void createMaze(CELL **maze, int N, int M);
         void printMaze(CELL **maze, int N, int M);
         void drawMaze(CELL **maze, int N, int M);
+        void drawCoin(CELL **maze, int N, int M);
 		
     //user defined variables
     int playerX, playerY;
@@ -37,6 +38,8 @@ class ofApp : public ofBaseApp{
     int topLx, topRx, downLx, downRx;
     int topLy, topRy, downLy, downRy;
     int drawMazeFlag = 0;
+    
+    int **visited;
     
     CELL **maze;
 };
