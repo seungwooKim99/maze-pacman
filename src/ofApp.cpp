@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include <time.h>
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -66,12 +67,32 @@ void ofApp::setup(){
     
     //init coin number
     totalCoin = 0;
+    
+    //init obstacle
+    obstacleX = ofGetWidth()/2;
+    obstacleY = ofGetHeight()/2;
+    
+    reverseFlagX = 0;
+    reverseFlagY = 0;
+    
+    srand(time(NULL));
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    //if random is 1, then change X coordinate
+    int random = rand()%2;
+    if(random){
+        if(topLx <= obstacleX && obstacleX <= topRx){
+            obstacleX += 3;
+        }
+    }
+    else{
+        if(topLy <= obstacleY && obstacleY <= downLy){
+            obstacleY += 3;
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -100,6 +121,13 @@ void ofApp::draw(){
     
     //Draw Maze
     drawMaze(maze, 10, 10);
+    
+    //Draw obstacle
+    ofSetColor(255, 49, 0);
+    ofDrawCircle(obstacleX+30, obstacleY+30, 20);
+    ofSetColor(0, 0, 0);
+    ofDrawLine(obstacleX+30-4, obstacleY+30-3, obstacleX+30-8, obstacleY+30-13);
+    ofDrawLine(obstacleX+30+4, obstacleY+30-3, obstacleX+30+8, obstacleY+30-13);
 }
 
 //--------------------------------------------------------------

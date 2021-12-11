@@ -42,5 +42,10 @@ class ofApp : public ofBaseApp{
     int **visited;
     int totalCoin;
     
+    int obstacleX;
+    int obstacleY;
+    int reverseFlagX;
+    int reverseFlagY;
+    
     CELL **maze;
 };
