@@ -81,16 +81,48 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    if(obstacleX == topRx)
+        reverseFlagX = 1;
+    if(obstacleX == topLx)
+        reverseFlagX = 0;
+    if(obstacleY == downLy)
+        reverseFlagY = 1;
+    if(obstacleY == topLy)
+        reverseFlagY = 0;
+    
     //if random is 1, then change X coordinate
-    int random = rand()%2;
-    if(random){
+    int changeX = rand()%2;
+    int randomNumber = rand()%15;
+    if(changeX){
         if(topLx <= obstacleX && obstacleX <= topRx){
-            obstacleX += 3;
+            if(!reverseFlagX){
+                if(obstacleX + randomNumber >= topRx)
+                    obstacleX = topRx;
+                else
+                    obstacleX += randomNumber;
+            }
+            else{
+                if(obstacleX - randomNumber <= topLx)
+                    obstacleX = topLx;
+                else
+                    obstacleX -= randomNumber;
+            }
         }
     }
     else{
         if(topLy <= obstacleY && obstacleY <= downLy){
-            obstacleY += 3;
+            if(!reverseFlagY){
+                if(obstacleY + randomNumber >= downLy)
+                    obstacleY = downLy;
+                else
+                    obstacleY += randomNumber;
+            }
+            else{
+                if(obstacleY - randomNumber <= topLy)
+                    obstacleY = topLy;
+                else
+                    obstacleY -= randomNumber;
+            }
         }
     }
 }
