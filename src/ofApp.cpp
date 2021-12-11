@@ -63,6 +63,9 @@ void ofApp::setup(){
     }
     visited[0][0] = 1;
     visited[N-1][M-1] = 1;
+    
+    //init coin number
+    totalCoin = 0;
 
 }
 
@@ -106,7 +109,10 @@ void ofApp::keyPressed(int key){
             if(playerY > topLy && maze[playerMazeX-1][playerMazeY].horizontal == 0){
                 playerY -= 62;
                 playerMazeX--;
-                visited[playerMazeX][playerMazeY] = 1;
+                if (!visited[playerMazeX][playerMazeY]){
+                    visited[playerMazeX][playerMazeY] = 1;
+                    totalCoin++;
+                }
             }
         }
     }
@@ -114,15 +120,26 @@ void ofApp::keyPressed(int key){
         if(playerX < topRx && maze[playerMazeX][playerMazeY].vertical == 0){
             playerX += 62;
             playerMazeY++;
-            visited[playerMazeX][playerMazeY] = 1;
-            //printf("visited[2][2]: %d, (x,y)=(%d,%d)\n", visited[2][2],playerMazeX,playerMazeY);
+            if (!visited[playerMazeX][playerMazeY]){
+                visited[playerMazeX][playerMazeY] = 1;
+                totalCoin++;
+            }
+            if(playerMazeX == 9 && playerMazeY == 9 && totalCoin == 98){
+                printf("Clear!\n");
+            }
         }
     }
     if(key == OF_KEY_DOWN){
         if(playerY < downLy && maze[playerMazeX][playerMazeY].horizontal == 0){
             playerY += 62;
             playerMazeX++;
-            visited[playerMazeX][playerMazeY] = 1;
+            if (!visited[playerMazeX][playerMazeY]){
+                visited[playerMazeX][playerMazeY] = 1;
+                totalCoin++;
+            }
+            if(playerMazeX == 9 && playerMazeY == 9 && totalCoin == 98){
+                printf("Clear!\n");
+            }
         }
     }
     if(key == OF_KEY_LEFT){
@@ -130,7 +147,10 @@ void ofApp::keyPressed(int key){
             if(playerX > downLx && maze[playerMazeX][playerMazeY-1].vertical == 0){
                 playerX -= 62;
                 playerMazeY--;
-                visited[playerMazeX][playerMazeY] = 1;
+                if (!visited[playerMazeX][playerMazeY]){
+                    visited[playerMazeX][playerMazeY] = 1;
+                    totalCoin++;
+                }
             }
         }
     }

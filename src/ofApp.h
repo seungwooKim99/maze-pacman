@@ -40,6 +40,7 @@ class ofApp : public ofBaseApp{
     int drawMazeFlag = 0;
     
     int **visited;
+    int totalCoin;
     
     CELL **maze;
 };
