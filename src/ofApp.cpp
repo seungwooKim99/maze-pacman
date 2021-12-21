@@ -75,53 +75,70 @@ void ofApp::setup(){
     reverseFlagX = 0;
     reverseFlagY = 0;
     
+    gameover = 0;
+    gameclear = 0;
+    
     srand(time(NULL));
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    if(obstacleX == topRx)
-        reverseFlagX = 1;
-    if(obstacleX == topLx)
-        reverseFlagX = 0;
-    if(obstacleY == downLy)
-        reverseFlagY = 1;
-    if(obstacleY == topLy)
-        reverseFlagY = 0;
+    //check game over
+    if(obstacleX-15 <= playerX && playerX <= obstacleX+15 && obstacleY-15 <= playerY && playerY <= obstacleY+15){
+        gameover = 1;
+        printf("GAME OVER!!\n");
+    }
+    //check game clear
+    if(playerMazeX == 9 && playerMazeY == 9 && totalCoin == 98){
+        gameclear = 1;
+        printf("GAME CLEAR!!\n");
+    }
     
-    //if random is 1, then change X coordinate
-    int changeX = rand()%2;
-    int randomNumber = rand()%15;
-    if(changeX){
-        if(topLx <= obstacleX && obstacleX <= topRx){
-            if(!reverseFlagX){
-                if(obstacleX + randomNumber >= topRx)
-                    obstacleX = topRx;
-                else
-                    obstacleX += randomNumber;
-            }
-            else{
-                if(obstacleX - randomNumber <= topLx)
-                    obstacleX = topLx;
-                else
-                    obstacleX -= randomNumber;
+    if(!gameover && !gameclear){
+        //set reverseFlag if the condition is true
+        if(obstacleX == topRx)
+            reverseFlagX = 1;
+        if(obstacleX == topLx)
+            reverseFlagX = 0;
+        if(obstacleY == downLy)
+            reverseFlagY = 1;
+        if(obstacleY == topLy)
+            reverseFlagY = 0;
+        
+        //change X coordinate if changeX is 1
+        int changeX = rand()%2;
+        int randomNumber = rand()%10;
+        if(changeX){
+            if(topLx <= obstacleX && obstacleX <= topRx){
+                if(!reverseFlagX){
+                    if(obstacleX + randomNumber >= topRx)
+                        obstacleX = topRx;
+                    else
+                        obstacleX += randomNumber;
+                }
+                else{
+                    if(obstacleX - randomNumber <= topLx)
+                        obstacleX = topLx;
+                    else
+                        obstacleX -= randomNumber;
+                }
             }
         }
-    }
-    else{
-        if(topLy <= obstacleY && obstacleY <= downLy){
-            if(!reverseFlagY){
-                if(obstacleY + randomNumber >= downLy)
-                    obstacleY = downLy;
-                else
-                    obstacleY += randomNumber;
-            }
-            else{
-                if(obstacleY - randomNumber <= topLy)
-                    obstacleY = topLy;
-                else
-                    obstacleY -= randomNumber;
+        else{
+            if(topLy <= obstacleY && obstacleY <= downLy){
+                if(!reverseFlagY){
+                    if(obstacleY + randomNumber >= downLy)
+                        obstacleY = downLy;
+                    else
+                        obstacleY += randomNumber;
+                }
+                else{
+                    if(obstacleY - randomNumber <= topLy)
+                        obstacleY = topLy;
+                    else
+                        obstacleY -= randomNumber;
+                }
             }
         }
     }
@@ -129,6 +146,14 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    //set the title
+    string title = "MAZE PACMAN";
+    ofSetColor(255,255,255);
+    ofDrawBitmapString(title, ofGetWidth()/2 - 40, 50);
+    
+    string madeBy = "  made by Seungwoo Kim\nSogang Univ CSE 20181610";
+    ofDrawBitmapString(madeBy, ofGetWidth()/2 - 90, ofGetHeight() - 50);
+    
     //Draw Out line of the Box
     ofSetColor(14,37,179);
     ofSetLineWidth(lineWidth);
@@ -160,58 +185,91 @@ void ofApp::draw(){
     ofSetColor(0, 0, 0);
     ofDrawLine(obstacleX+30-4, obstacleY+30-3, obstacleX+30-8, obstacleY+30-13);
     ofDrawLine(obstacleX+30+4, obstacleY+30-3, obstacleX+30+8, obstacleY+30-13);
+    
+    //Draw Game Over
+    if(gameover){
+        int centerY = ofGetHeight()/2;
+        int centerX = ofGetWidth()/2;
+        ofSetColor(255, 255, 255);
+        ofDrawRectangle(centerX-80, centerY-30, 160, 60);
+        ofSetColor(0, 0, 0);
+        ofDrawRectangle(centerX-79, centerY-29, 158, 58);
+        ofSetColor(255, 255, 255);
+        ofDrawBitmapString("   GAME OVER\nPress q to quit", centerX - 60, centerY);
+    }
+    if(gameclear){
+        int centerY = ofGetHeight()/2;
+        int centerX = ofGetWidth()/2;
+        ofSetColor(255, 255, 255);
+        ofDrawRectangle(centerX-80, centerY-30, 160, 60);
+        ofSetColor(0, 0, 0);
+        ofDrawRectangle(centerX-79, centerY-29, 158, 58);
+        ofSetColor(255, 255, 255);
+        ofDrawBitmapString("  GAME CLEAR!\nPress q to quit", centerX - 60, centerY);
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if(key == OF_KEY_UP){
-        if(playerMazeX != 0){
-            if(playerY > topLy && maze[playerMazeX-1][playerMazeY].horizontal == 0){
-                playerY -= 62;
-                playerMazeX--;
+    if(!gameover){
+        if(key == OF_KEY_UP){
+            if(playerMazeX != 0){
+                if(playerY > topLy && maze[playerMazeX-1][playerMazeY].horizontal == 0){
+                    playerY -= 62;
+                    playerMazeX--;
+                    if (!visited[playerMazeX][playerMazeY]){
+                        visited[playerMazeX][playerMazeY] = 1;
+                        totalCoin++;
+                    }
+                }
+            }
+        }
+        if(key == OF_KEY_RIGHT){
+            if(playerX < topRx && maze[playerMazeX][playerMazeY].vertical == 0){
+                playerX += 62;
+                playerMazeY++;
                 if (!visited[playerMazeX][playerMazeY]){
                     visited[playerMazeX][playerMazeY] = 1;
                     totalCoin++;
                 }
+                if(playerMazeX == 9 && playerMazeY == 9 && totalCoin == 98){
+                    printf("Clear!\n");
+                }
             }
         }
-    }
-    if(key == OF_KEY_RIGHT){
-        if(playerX < topRx && maze[playerMazeX][playerMazeY].vertical == 0){
-            playerX += 62;
-            playerMazeY++;
-            if (!visited[playerMazeX][playerMazeY]){
-                visited[playerMazeX][playerMazeY] = 1;
-                totalCoin++;
-            }
-            if(playerMazeX == 9 && playerMazeY == 9 && totalCoin == 98){
-                printf("Clear!\n");
-            }
-        }
-    }
-    if(key == OF_KEY_DOWN){
-        if(playerY < downLy && maze[playerMazeX][playerMazeY].horizontal == 0){
-            playerY += 62;
-            playerMazeX++;
-            if (!visited[playerMazeX][playerMazeY]){
-                visited[playerMazeX][playerMazeY] = 1;
-                totalCoin++;
-            }
-            if(playerMazeX == 9 && playerMazeY == 9 && totalCoin == 98){
-                printf("Clear!\n");
-            }
-        }
-    }
-    if(key == OF_KEY_LEFT){
-        if(playerMazeY != 0){
-            if(playerX > downLx && maze[playerMazeX][playerMazeY-1].vertical == 0){
-                playerX -= 62;
-                playerMazeY--;
+        if(key == OF_KEY_DOWN){
+            if(playerY < downLy && maze[playerMazeX][playerMazeY].horizontal == 0){
+                playerY += 62;
+                playerMazeX++;
                 if (!visited[playerMazeX][playerMazeY]){
                     visited[playerMazeX][playerMazeY] = 1;
                     totalCoin++;
                 }
+                if(playerMazeX == 9 && playerMazeY == 9 && totalCoin == 98){
+                    printf("Clear!\n");
+                }
             }
+        }
+        if(key == OF_KEY_LEFT){
+            if(playerMazeY != 0){
+                if(playerX > downLx && maze[playerMazeX][playerMazeY-1].vertical == 0){
+                    playerX -= 62;
+                    playerMazeY--;
+                    if (!visited[playerMazeX][playerMazeY]){
+                        visited[playerMazeX][playerMazeY] = 1;
+                        totalCoin++;
+                    }
+                }
+            }
+        }
+    }
+    if(gameover || gameclear){
+        if(key == 'q'){
+            printf("Press q to quit");
+            //free memory
+            
+            _Exit(0);
+            
         }
     }
     if(key == 'd'){

@@ -47,5 +47,8 @@ class ofApp : public ofBaseApp{
     int reverseFlagX;
     int reverseFlagY;
     
+    int gameover;
+    int gameclear;
+    
     CELL **maze;
 };
